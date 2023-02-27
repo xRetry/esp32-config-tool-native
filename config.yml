@@ -1,0 +1,8 @@
+pins:
+  - number: 1
+    type: analog
+    direction: output
+
+  - number: 2
+    type: digital
+    direction: input
