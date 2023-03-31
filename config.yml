@@ -1,8 +1,18 @@
+transport:
+  type: udp
+  agent_ip: 10.0.0.36
+  agent_port: 8888
+  wifi_ssid: ssid_name
+  wifi_password: password
+
 pins:
   - number: 1
-    type: analog
-    direction: output
+    mode: analog_input
 
   - number: 2
-    type: digital
-    direction: input
+    mode: digital_output
+
+topics:
+  service: set_config
+  publisher: read_pins
+  subcriber: write_pins

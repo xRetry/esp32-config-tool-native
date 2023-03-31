@@ -1,51 +1,59 @@
+mod ros2_service;
+
 use std::env;
 use serde::{Serialize, Deserialize};
 use serde_yaml;
+use ros2_service::send_request;
 
 #[derive(Serialize, Deserialize, Debug)]
-enum Direction {
+enum PinMode {
     #[serde(alias = "disabled")]
     Disabled,
-    #[serde(alias = "input")]
-    Input,
-    #[serde(alias = "output")]
-    Output,
+    #[serde(alias = "digital_input")]
+    DigitalInput,
+    #[serde(alias = "digital_output")]
+    DigitalOutput,
+    #[serde(alias = "analog_input")]
+    AnalogInput,
+    #[serde(alias = "analog_output")]
+    AnalogOutput,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-enum PinType {
-    #[serde(alias = "digital")]
-    Digital,
-    #[serde(alias = "analog")]
-    Analog,
+struct TransportConfig {
+    r#type: String,
+    agent_ip: String,
+    agent_port: i32,
+    wifi_ssid: String,
+    wifi_password: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 struct PinConfig {
-    #[serde(alias = "number")]
-    pin_nr: u8,
-    #[serde(alias = "type")]
-    pin_type: PinType,
-    direction: Direction,
+    number: u8,
+    mode: PinMode,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-struct Config {
-    pins: Vec<PinConfig>,
+struct TopicConfig {
+    service: String,
+    publisher: String,
+    subcriber: String,
 }
 
-fn set_pins(pin_configs: &Vec<PinConfig>) {
-    for p in pin_configs.iter() {
-        println!("{:?}", p);
-    }
+#[derive(Serialize, Deserialize, Debug)]
+struct FileContent {
+    pins: Vec<PinConfig>, 
+    transport: TransportConfig,
+    topics: TopicConfig,
 }
 
 fn main() {
     let args: Vec<String> = env::args().collect();
     let file_path = args.get(1).expect("Provide config file path as console argument");
     let reader = std::fs::File::open(file_path).expect("Unable to open file");
-    let config: Config = serde_yaml::from_reader(reader).expect("Unable to parse file");
+    let config: FileContent = serde_yaml::from_reader(reader).expect("Unable to parse file");
 
-    set_pins(&config.pins);
     println!("{:?}", config);
+    //send_request(request);
 }
