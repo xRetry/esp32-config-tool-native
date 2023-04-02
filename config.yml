@@ -1,5 +1,9 @@
+change_pins: false
+change_transport: false
+change_node: false
+
 transport:
-  type: udp
+  use_wifi: true
   agent_ip: 10.0.0.36
   agent_port: 8888
   wifi_ssid: ssid_name
@@ -12,7 +16,8 @@ pins:
   - number: 2
     mode: digital_output
 
-topics:
-  service: set_config
-  publisher: read_pins
-  subcriber: write_pins
+node:
+  node_name: esp32
+  service_name: set_config
+  publisher_name: read_pins
+  subcriber_name: write_pins
