@@ -1,19 +1,21 @@
 use ros2_client::{Message, Service};
 use serde::{Serialize, Deserialize};
 use serde_big_array::BigArray;
+use serde_repr::Serialize_repr;
 
-#[derive(Serialize, Deserialize, Debug, Clone, Copy)]
+#[derive(Serialize_repr, Deserialize, Debug, Clone, Copy)]
+#[repr(u8)]
 enum PinMode {
     #[serde(alias = "disabled")]
-    Disabled,
+    Disabled = 0,
     #[serde(alias = "digital_input")]
-    DigitalInput,
+    DigitalInput = 1,
     #[serde(alias = "digital_output")]
-    DigitalOutput,
+    DigitalOutput = 2,
     #[serde(alias = "analog_input")]
-    AnalogInput,
+    AnalogInput = 3,
     #[serde(alias = "analog_output")]
-    AnalogOutput,
+    AnalogOutput = 4,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -60,9 +62,9 @@ pub struct SetConfigRequest {
     change_pins: bool,
     new_pin_config: PinConfig,
     change_node: bool,
-    new_node_config: NodeConfig,
+    //new_node_config: NodeConfig,
     change_transport: bool,
-    new_transport_config: TransportConfig,
+    //new_transport_config: TransportConfig,
 }
 
 impl Message for SetConfigRequest {}
@@ -78,8 +80,8 @@ impl SetConfigRequest {
             change_pins: file_content.change_pins,
             change_node: file_content.change_node,
             change_transport: file_content.change_transport,
-            new_transport_config: file_content.transport,
-            new_node_config: file_content.node,
+            //new_transport_config: file_content.transport,
+            //new_node_config: file_content.node,
             new_pin_config: PinConfig{ pin_modes },
         }
     }
@@ -90,9 +92,9 @@ pub struct SetConfigResponse {
     active_pin_config: PinConfig,
     #[serde(with = "BigArray")]
     pin_error: [u8; 36],
-    active_node_config: NodeConfig,
+    //active_node_config: NodeConfig,
     node_error: u8,
-    new_transport_config: TransportConfig,
+    //new_transport_config: TransportConfig,
     transport_error: u8,
 }
 

@@ -1,4 +1,4 @@
-change_pins: false
+change_pins: true
 change_transport: false
 change_node: false
 
@@ -10,11 +10,20 @@ transport:
   wifi_password: password
 
 pins:
-  - number: 1
+  - number: 26
+    mode: digital_input
+
+  - number: 14
+    mode: digital_output
+
+  - number: 33
     mode: analog_input
 
-  - number: 2
-    mode: digital_output
+  - number: 25
+    mode: analog_output
+
+  - number: 0
+    mode: analog_output
 
 node:
   node_name: esp32

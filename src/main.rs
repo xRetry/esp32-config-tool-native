@@ -6,7 +6,6 @@ use serde_yaml;
 use types::{FileContent, SetConfigRequest};
 use ros2_service::send_request;
 
-
 fn main() {
     let args: Vec<String> = env::args().collect();
     let file_path = args.get(1).expect("Provide config file path as console argument");

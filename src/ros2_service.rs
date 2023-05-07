@@ -19,7 +19,7 @@ pub fn send_request(request: SetConfigRequest) {
     let mut client = node
         .create_client::<SetConfigService>(
             ServiceMappings::Enhanced,
-            "/add_two_ints",
+            "/esp32_set_config",
             service_qos.clone(),
             service_qos.clone(),
         )
@@ -42,8 +42,8 @@ pub fn send_request(request: SetConfigRequest) {
         }
     }
 
-    let mut events = Events::with_capacity(100);
-    poll.poll(&mut events, Some(Duration::from_secs(5)))
+    let mut events = Events::with_capacity(1);
+    poll.poll(&mut events, Some(Duration::from_secs(10)))
         .unwrap();
 
     for event in events.iter() {
@@ -78,7 +78,7 @@ fn create_node() -> Node {
     let node = context
         .new_node(
             "esp32_config_tool",
-            "/rustdds",
+            "",
             NodeOptions::new().enable_rosout(true),
         )
         .unwrap();
