@@ -26,45 +26,15 @@ pub struct PinSetting {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct FileContent {
-    change_pins: bool,
-    change_transport: bool,
-    change_node: bool,
+    read_only: bool,
     pins: Vec<PinSetting>, 
-    transport: TransportConfig,
-    node: NodeConfig,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct TransportConfig {
-    use_wifi: bool,
-    agent_ip: String,
-    agent_port: String,
-    wifi_ssid: String,
-    wifi_password: String,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct PinConfig {
-    #[serde(with = "BigArray")]
-    pin_modes: [PinMode; 36],
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct NodeConfig {
-    node_name: String,
-    service_name: String,
-    publisher_name: String,
-    subcriber_name: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct SetConfigRequest {
-    change_pins: bool,
-    new_pin_config: PinConfig,
-    change_node: bool,
-    //new_node_config: NodeConfig,
-    change_transport: bool,
-    //new_transport_config: TransportConfig,
+    read_only: bool,
+    #[serde(with = "BigArray")]
+    pin_modes: [PinMode; 36],
 }
 
 impl Message for SetConfigRequest {}
@@ -77,25 +47,18 @@ impl SetConfigRequest {
         });
 
         SetConfigRequest {
-            change_pins: file_content.change_pins,
-            change_node: file_content.change_node,
-            change_transport: file_content.change_transport,
-            //new_transport_config: file_content.transport,
-            //new_node_config: file_content.node,
-            new_pin_config: PinConfig{ pin_modes },
+            read_only: file_content.read_only,
+            pin_modes,
         }
     }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct SetConfigResponse {
-    active_pin_config: PinConfig,
     #[serde(with = "BigArray")]
     pin_error: [u8; 36],
-    //active_node_config: NodeConfig,
-    node_error: u8,
-    //new_transport_config: TransportConfig,
-    transport_error: u8,
+    #[serde(with = "BigArray")]
+    pin_modes: [PinMode; 36],
 }
 
 impl Message for SetConfigResponse {}

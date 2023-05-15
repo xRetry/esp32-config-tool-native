@@ -1,11 +1,8 @@
-use std::time::Duration;
+use crate::types::{SetConfigRequest, SetConfigService};
 use mio::{Events, Poll, PollOpt, Ready, Token};
-use ros2_client::{
-  Context, Node, NodeOptions, ServiceMappings,
-};
+use ros2_client::{Context, Node, NodeOptions, ServiceMappings};
 use rustdds::{policy, QosPolicies, QosPolicyBuilder};
-use crate::types::{SetConfigService, SetConfigRequest};
-
+use std::time::Duration;
 
 const RESPONSE_TOKEN: Token = Token(7); // Just an arbitrary value
 
@@ -42,8 +39,8 @@ pub fn send_request(request: SetConfigRequest) {
         }
     }
 
-    let mut events = Events::with_capacity(1);
-    poll.poll(&mut events, Some(Duration::from_secs(10)))
+    let mut events = Events::with_capacity(100);
+    poll.poll(&mut events, Some(Duration::from_secs(1)))
         .unwrap();
 
     for event in events.iter() {
@@ -64,11 +61,11 @@ pub fn send_request(request: SetConfigRequest) {
 fn create_qos() -> QosPolicies {
     let service_qos: QosPolicies = {
         QosPolicyBuilder::new()
-        .reliability(policy::Reliability::Reliable {
-            max_blocking_time: rustdds::Duration::from_millis(100),
-        })
-        .history(policy::History::KeepLast { depth: 1 })
-        .build()
+            .reliability(policy::Reliability::Reliable {
+                max_blocking_time: rustdds::Duration::from_millis(100),
+            })
+            .history(policy::History::KeepLast { depth: 1 })
+            .build()
     };
     service_qos
 }

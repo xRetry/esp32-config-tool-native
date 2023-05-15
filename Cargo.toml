@@ -12,3 +12,4 @@ ros2-client = "0.3.0"
 mio = "0.6.23"
 mio-extras = "2.0.6"
 serde_repr = "0.1.12"
+clap = { version = "4.2.7", features = ["derive"] }
